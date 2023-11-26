@@ -1,0 +1,1020 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+        rel="shortcut icon"
+        href=""
+        type="image/x-icon"
+        />
+        <title>BSC Reporting App</title>
+
+        <!-- ========== All CSS files linkup ========= -->
+        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'assets/css/lineicons.css' %}" />
+        <link rel="stylesheet" href="{% static 'assets/css/materialdesignicons.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'assets/css/fullcalendar.css' %}" />
+        <link rel="stylesheet" href="{% static 'assets/css/fullcalendar.css' %}" />
+        <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        
+    </head>
+    <body>
+        {% include 'partials/sidebar.html' %}
+        {% include 'partials/navbar.html' %}    
+        
+    
+        {% block content %}
+        
+        {% endblock content %}
+
+          <!-- ========= All Javascript files linkup ======== -->
+    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/Chart.min.js' %}"></script>
+    <script src="{% static 'assets/js/dynamic-pie-chart.js' %}"></script>
+    <script src="{% static 'assets/js/moment.min.js' %}"></script>
+    <script src="{% static 'assets/js/fullcalendar.js' %}"></script>
+    <script src="{% static 'assets/js/polyfill.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--<script src="{% static 'assets/js/table.js' %}"></script>-->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <!--The script below handles all charts-->
+    <script>
+       
+       
+        // =========== chart one start
+        var allData = JSON.parse('{{ report_data|escapejs }}');
+        // Calculate the sum of total_sales
+        var totalSalesSum = 0;
+        for (var i = 0; i < allData.length; i++) {
+          totalSalesSum += allData[i].total_sales;
+        }
+
+        // Display the sum in the <h3> HTML tag
+          var h3Element = document.getElementById('total-sales');
+          var formattedTotalSales = totalSalesSum.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+          h3Element.textContent = 'Rwf ' + formattedTotalSales;
+          h3Element.classList.add('text-bold');
+      // Calculate total sales for each month
+      const monthlySales = {};
+      allData.forEach(function(data) {
+        const month = data.sales_month;
+        const sales = data.total_sales;
+        if (!monthlySales.hasOwnProperty(month)) {
+          monthlySales[month] = sales;
+        } else {
+          monthlySales[month] += sales;
+        }
+      });
+    
+      // Extract the unique months and total sales values
+      const salesMonths = Object.keys(monthlySales);
+      const totalSales = Object.values(monthlySales);
+    
+      // Create the line chart using Chart.js
+      const ctx1 = document.getElementById("Chart1").getContext("2d");
+      const chart1 = new Chart(ctx1, {
+        // The type of chart we want to create
+        type: "line", // also try bar or other graph types
+    
+        // The data for our dataset
+        data: {
+          labels: salesMonths,
+          // Information about the dataset
+          datasets: [
+            {
+              label: "",
+              backgroundColor: "transparent",
+              borderColor: "#4A6CF7",
+              data: totalSales,
+              pointBackgroundColor: "transparent",
+              pointHoverBackgroundColor: "#4A6CF7",
+              pointBorderColor: "transparent",
+              pointHoverBorderColor: "#fff",
+              pointHoverBorderWidth: 5,
+              pointBorderWidth: 5,
+              pointRadius: 8,
+              pointHoverRadius: 8,
+            },
+          ],
+        },
+    
+        // Configuration options
+        defaultFontFamily: "Inter",
+        options: {
+          tooltips: {
+            callbacks: {
+              labelColor: function (tooltipItem, chart) {
+                return {
+                  backgroundColor: "#ffffff",
+                };
+              },
+            },
+            intersect: false,
+            backgroundColor: "#f9f9f9",
+            titleFontFamily: "Inter",
+            titleFontColor: "#8F92A1",
+            titleFontColor: "#8F92A1",
+            titleFontSize: 12,
+            bodyFontFamily: "Inter",
+            bodyFontColor: "#171717",
+            bodyFontStyle: "bold",
+            bodyFontSize: 16,
+            multiKeyBackground: "transparent",
+            displayColors: false,
+            xPadding: 30,
+            yPadding: 10,
+            bodyAlign: "center",
+            titleAlign: "center",
+          },
+    
+          title: {
+            display: false,
+          },
+          legend: {
+            display: false,
+          },
+    
+          scales: {
+            yAxes: [
+              {
+                gridLines: {
+                  display: false,
+                  drawTicks: false,
+                  drawBorder: false,
+                },
+                ticks: {
+                  padding: 35,
+                  max: Math.max(...totalSales) + 100,
+                  min: Math.min(...totalSales) - 100,
+                },
+              },
+            ],
+            xAxes: [
+              {
+                gridLines: {
+                  drawBorder: false,
+                  color: "rgba(143, 146, 161, .1)",
+                  zeroLineColor: "rgba(143, 146, 161, .1)",
+                },
+                ticks: {
+                  padding: 20,
+                },
+              },
+            ],
+          },
+        },
+      });
+  
+        // =========== chart one end
+  
+        // =========== chart two start
+        const ctx2 = document.getElementById("Chart2").getContext("2d");
+        const chart2 = new Chart(ctx2, {
+          // The type of chart we want to create
+          type: "bar", // also try bar or other graph types
+          // The data for our dataset
+          data: {
+            labels: [
+              "Jan",
+              "Fab",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ],
+            // Information about the dataset
+            datasets: [
+              {
+                label: "",
+                backgroundColor: "#4A6CF7",
+                barThickness: 6,
+                maxBarThickness: 8,
+                data: [
+                  600, 700, 1000, 700, 650, 800, 690, 740, 720, 1120, 876, 900,
+                ],
+              },
+            ],
+          },
+          // Configuration options
+          options: {
+            borderColor: "#F3F6F8",
+            borderWidth: 15,
+            backgroundColor: "#F3F6F8",
+            tooltips: {
+              callbacks: {
+                labelColor: function (tooltipItem, chart) {
+                  return {
+                    backgroundColor: "rgba(104, 110, 255, .0)",
+                  };
+                },
+              },
+              backgroundColor: "#F3F6F8",
+              titleFontColor: "#8F92A1",
+              titleFontSize: 12,
+              bodyFontColor: "#171717",
+              bodyFontStyle: "bold",
+              bodyFontSize: 16,
+              multiKeyBackground: "transparent",
+              displayColors: false,
+              xPadding: 30,
+              yPadding: 10,
+              bodyAlign: "center",
+              titleAlign: "center",
+            },
+  
+            title: {
+              display: false,
+            },
+            legend: {
+              display: false,
+            },
+  
+            scales: {
+              yAxes: [
+                {
+                  gridLines: {
+                    display: false,
+                    drawTicks: false,
+                    drawBorder: false,
+                  },
+                  ticks: {
+                    padding: 35,
+                    max: 200000000,
+                    min: 0,
+                  },
+                },
+              ],
+              xAxes: [
+                {
+                  gridLines: {
+                    display: false,
+                    drawBorder: false,
+                    color: "rgba(143, 146, 161, .1)",
+                    zeroLineColor: "rgba(143, 146, 161, .1)",
+                  },
+                  ticks: {
+                    padding: 20,
+                  },
+                },
+              ],
+            },
+          },
+        });
+        // =========== chart two end
+  
+        // =========== chart three start
+        const ctx3 = document.getElementById("Chart3").getContext("2d");
+        const chart3 = new Chart(ctx3, {
+          // The type of chart we want to create
+          type: "line", // also try bar or other graph types
+  
+          // The data for our dataset
+          data: {
+            labels: [
+              "Jan",
+              "Fab",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ],
+            // Information about the dataset
+            datasets: [
+              {
+                label: "Revenue",
+                backgroundColor: "transparent",
+                borderColor: "#4a6cf7",
+                data: [80, 120, 110, 100, 130, 150, 115, 145, 140, 130, 160, 210],
+                pointBackgroundColor: "transparent",
+                pointHoverBackgroundColor: "#4a6cf7",
+                pointBorderColor: "transparent",
+                pointHoverBorderColor: "#fff",
+                pointHoverBorderWidth: 3,
+                pointBorderWidth: 5,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+              },
+              {
+                label: "Profit",
+                backgroundColor: "transparent",
+                borderColor: "#9b51e0",
+                data: [
+                  120, 160, 150, 140, 165, 210, 135, 155, 170, 140, 130, 200,
+                ],
+                pointBackgroundColor: "transparent",
+                pointHoverBackgroundColor: "#9b51e0",
+                pointBorderColor: "transparent",
+                pointHoverBorderColor: "#fff",
+                pointHoverBorderWidth: 3,
+                pointBorderWidth: 5,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+              },
+              {
+                label: "Order",
+                backgroundColor: "transparent",
+                borderColor: "#f2994a",
+                data: [180, 110, 140, 135, 100, 90, 145, 115, 100, 110, 115, 150],
+                pointBackgroundColor: "transparent",
+                pointHoverBackgroundColor: "#f2994a",
+                pointBorderColor: "transparent",
+                pointHoverBorderColor: "#fff",
+                pointHoverBorderWidth: 3,
+                pointBorderWidth: 5,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+              },
+            ],
+          },
+  
+          // Configuration options
+          options: {
+            tooltips: {
+              intersect: false,
+              backgroundColor: "#fbfbfb",
+              titleFontColor: "#8F92A1",
+              titleFontSize: 16,
+              titleFontFamily: "Inter",
+              titleFontStyle: "400",
+              bodyFontFamily: "Inter",
+              bodyFontColor: "#171717",
+              bodyFontSize: 16,
+              multiKeyBackground: "transparent",
+              displayColors: false,
+              xPadding: 30,
+              yPadding: 15,
+              borderColor: "rgba(143, 146, 161, .1)",
+              borderWidth: 1,
+              title: false,
+            },
+  
+            title: {
+              display: false,
+            },
+  
+            layout: {
+              padding: {
+                top: 0,
+              },
+            },
+  
+            legend: false,
+  
+            scales: {
+              yAxes: [
+                {
+                  gridLines: {
+                    display: false,
+                    drawTicks: false,
+                    drawBorder: false,
+                  },
+                  ticks: {
+                    padding: 35,
+                    max: 300,
+                    min: 50,
+                  },
+                },
+              ],
+              xAxes: [
+                {
+                  gridLines: {
+                    drawBorder: false,
+                    color: "rgba(143, 146, 161, .1)",
+                    zeroLineColor: "rgba(143, 146, 161, .1)",
+                  },
+                  ticks: {
+                    padding: 20,
+                  },
+                },
+              ],
+            },
+          },
+        });
+        // =========== chart three end
+  
+        // ================== chart four start
+         // Fetch the JSON data from Django template variables
+         var reportData = JSON.parse('{{ report_data|escapejs }}');
+         var targetData = JSON.parse('{{ target_data|escapejs }}');
+         
+         function calculateTotalsByMonth(data) {
+           const totalsByMonth = {};
+           data.forEach((item) => {
+             const { total_sales, total_targets, sales_month } = item;
+             if (!totalsByMonth[sales_month]) {
+               totalsByMonth[sales_month] = { total_sales: 0, total_targets: 0 };
+             }
+             totalsByMonth[sales_month].total_sales += parseFloat(total_sales);
+             totalsByMonth[sales_month].total_targets += parseFloat(total_targets);
+           });
+           return totalsByMonth;
+         }
+     
+         const salesTotalsByMonth = calculateTotalsByMonth(reportData);
+         const targetsTotalsByMonth = calculateTotalsByMonth(targetData);
+     
+         const months = Object.keys(targetsTotalsByMonth);
+         const salesData = months.map((month) => salesTotalsByMonth[month]?.total_sales || 0);
+         const targetsData = months.map((month) => targetsTotalsByMonth[month]?.total_targets || 0);
+     
+         const ctx = document.getElementById("salesTargetsChart").getContext("2d");
+         const chart = new Chart(ctx, {
+           type: "bar",
+           data: {
+             labels: months,
+             datasets: [
+               {
+                 label: "Total Sales",
+                 backgroundColor: "#4A6CF7",
+                 data: salesData,
+               },
+               {
+                 label: "Total Targets",
+                 backgroundColor: "#d50100",
+                 data: targetsData,
+               },
+             ],
+           },
+           options: {
+             // Add any additional options here if needed
+           },
+         });
+     
+         document.getElementById("account-manager-filter").addEventListener("change", updateChart);
+         document.getElementById("product-filter").addEventListener("change", updateChart);
+     
+         function updateChart() {
+          const selectedAccount_manager = document.getElementById("account-manager-filter").value;
+          const selectedProduct = document.getElementById("product-filter").value.trim(); // Trim spaces from the product name
+          console.log("Selected Product:", selectedProduct);
+        
+          const filteredReportData = reportData.filter(item =>
+            (!selectedAccount_manager || item.account_manager === selectedAccount_manager) &&
+            (!selectedProduct || item.product.trim() === selectedProduct)
+          );
+          console.log("Filtered Report Data:", filteredReportData);
+        
+          const filteredTargetData = targetData.filter(item =>
+            (!selectedAccount_manager || item.account_manager === selectedAccount_manager) &&
+            (!selectedProduct || item.product.trim() === selectedProduct)
+          );
+          console.log("Filtered Target Data:", filteredTargetData);
+        
+          const filteredSalesTotalsByMonth = calculateTotalsByMonth(filteredReportData);
+          console.log("Filtered Sales Totals:", filteredSalesTotalsByMonth);
+        
+          const filteredTargetsTotalsByMonth = calculateTotalsByMonth(filteredTargetData);
+          console.log("Filtered Targets Totals:", filteredTargetsTotalsByMonth);
+        
+          const filteredMonths = Object.keys(filteredTargetsTotalsByMonth);
+        
+          chart.data.labels = filteredMonths;
+          chart.data.datasets[0].data = filteredMonths.map(month => filteredSalesTotalsByMonth[month]?.total_sales || 0);
+          chart.data.datasets[1].data = filteredMonths.map(month => filteredTargetsTotalsByMonth[month]?.total_targets || 0);
+          chart.update();
+        }
+        
+        // =========== chart four end
+        var allData = JSON.parse('{{ report_data|escapejs }}');
+      </script>
+      <!--this handles total targets card-->
+      <script>
+        var targetData = JSON.parse('{{ target_data|escapejs }}');
+              // Calculate the sum of total_sales
+              var totalTargetsSum = 0;
+              for (var i = 0; i < targetData.length; i++) {
+                totalTargetsSum += targetData[i].total_targets;
+              }
+              console.log("hello");
+              console.log(totalTargetsSum);
+              // Display the sum in the <h3> HTML tag
+              var h3Element = document.getElementById('total-targets');
+              h3Element.textContent = 'Rwf ' + totalTargetsSum;
+              h3Element.classList.add('text-bold');
+              // Calculate total targets for each month
+            const monthlyTargets = {};
+            targetData.forEach(function(data) {
+              const month = data.sales_month;
+              const targets = data.total_targets;
+              if (!monthlyTargets.hasOwnProperty(month)) {
+                monthlyTargets[month] = targets;
+              } else {
+                monthlyTargets[month] += targets;
+              }
+            });
+           // Calculate the percentage of target achieved from total sales
+            const totalAchievedPercentage = (totalSalesSum / totalTargetsSum) * 100;
+            const percentageDifference = totalAchievedPercentage;
+
+            // Display the percentage in the <p> HTML tag
+            var percentageElement = document.getElementById('percentage-difference');
+            percentageElement.textContent = percentageDifference.toFixed(2) + '% achieved';
+            percentageElement.classList.add('text-gray');
+
+      </script>
+      
+      <!--The script below handles all this related to the sales history table and it's filters-->
+      <script>
+        //var allData = JSON.parse('{{ data_json|escapejs }}');
+       //console.log(allData);
+       $(document).ready(function () {
+       var jsonData = JSON.parse('{{ report_data|escapejs }}');
+       console.log(jsonData);
+       var accountManagerSales = {};
+       var itemsPerPage = 10;
+       var currentPage = 1;
+       var filteredData = jsonData; // Store the filtered data
+     
+       
+         // Function to populate the table with JSON data
+         function populateTable(data, page) {
+           var tableBody = $('#data-table tbody');
+           tableBody.empty();
+           var tableBody2 = $('#data-table2 tbody');
+           tableBody2.empty();
+       
+           // Calculate the start and end indices for the current page
+           var startIndex = (page - 1) * itemsPerPage;
+           var endIndex = startIndex + itemsPerPage;
+       
+           // Loop through the data and create table rows for the current page
+           for (var i = startIndex; i < endIndex && i < data.length; i++) {
+             var item = data[i];
+             var row = $('<tr>');
+             // Added table data (columns) here based on my JSON structure
+             row.append($('<td class="text-sm">').text(item.id));
+             row.append($('<td class="text-sm">').text(item.bp_code));
+             row.append($('<td class="text-sm">').text(item.bp_name));
+             row.append($('<td class="text-sm">').text(item.district));
+             row.append($('<td class="text-sm">').text(item.profile));
+             row.append($('<td class="text-sm">').text(item.sector));
+             row.append($('<td class="text-sm">').text(item.customer_category));
+             row.append($('<td class="text-sm">').text(item.supplier));
+             row.append($('<td class="text-sm">').text(item.product));
+             row.append($('<td class="text-sm">').text(item.item_description));
+             row.append($('<td class="text-sm">').text(item.qty));
+             row.append($('<td class="text-sm">').text(item.price));
+       
+             var totalSales = item.qty * item.price;
+             row.append($('<td class="text-sm">').text(totalSales));
+       
+             // Reorder the columns to display correctly
+             row.append($('<td class="text-sm">').text(item.sales_month));
+             row.append($('<td class="text-sm">').text(item.end_date));
+       
+             var endDate = new Date(item.end_date);
+             var currentDate = new Date();
+             var timeDiff = Math.ceil((endDate - currentDate) / (1000 * 60 * 60 * 24));
+             row.append($('<td class="text-sm">').text(timeDiff));
+             var statusSpan = $('<span>');
+             var contractStatus;
+             if (timeDiff <= 0) {
+               contractStatus = 'Expired';
+               statusSpan.addClass('status-btn close-btn');
+             } else if (timeDiff < 30) {
+               contractStatus = 'Expires < 30 days';
+                 statusSpan.addClass('status-btn warning-btn');
+             } else if (timeDiff < 60) {
+               contractStatus = 'Expires < 60 days';
+                 statusSpan.addClass('status-btn warning-btn');
+             } else {
+               contractStatus = 'Valid Contract';
+                 statusSpan.addClass('status-btn success-btn');
+             }
+             
+     
+             // Add the classes "status-btn" and "close-btn" to the span
+            
+     
+             // Set the text content of the span to the contractStatus variable
+             statusSpan.text(contractStatus);
+     
+             // Create a new table data (td) element
+             var tdElement = $('<td class="text-sm">');
+     
+             // Append the statusSpan to the tdElement
+             tdElement.append(statusSpan);
+     
+             // Now, you can use the tdElement wherever you need it (e.g., append it to a row or table).
+             // For example, if you want to append it to a row:
+             row.append(tdElement);
+       
+             row.append($('<td class="text-sm">').text(item.account_manager));
+       
+             tableBody.append(row);
+             tableBody2.append(row);
+           }
+           updatePaginationButtons();
+         }
+       
+         // Function to update the pagination buttons
+          // Function to update the pagination buttons
+          function updatePaginationButtons() {
+            var totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            var paginationButtons = $('#pagination-buttons');
+            paginationButtons.empty();
+          
+            // Calculate the range of visible page numbers
+            var visibleRange = 3; // You can adjust this to change the number of visible buttons
+            var startPage = Math.max(currentPage - visibleRange, 1);
+            var endPage = Math.min(currentPage + visibleRange, totalPages);
+          
+            // Add Previous button if not on the first page
+            if (currentPage > 1) {
+              var prevButton = $('<button class="main-btn2 primary-btn btn-hover">').text('Previous');
+              prevButton.on('click', function () {
+                currentPage--;
+                populateTable(filteredData, currentPage);
+                updatePaginationButtons();
+              });
+              paginationButtons.append(prevButton);
+            }
+          
+            // Add first page button
+            var firstPageButton = $('<button class="main-btn2 primary-btn btn-hover">').text('1');
+            firstPageButton.on('click', function () {
+              currentPage = 1;
+              populateTable(filteredData, currentPage);
+              updatePaginationButtons();
+            });
+            paginationButtons.append(firstPageButton);
+          
+            // Add ellipsis if there are pages before the visible range
+            if (startPage > 2) {
+              paginationButtons.append($('<span class="ellipsis">').text('.......'));
+            }
+          
+            // Add buttons for the visible page range
+            for (var i = startPage; i <= endPage; i++) {
+              var button = $('<button class="main-btn2 primary-btn btn-hover">').text(i);
+              if (i === currentPage) {
+                button.addClass('active');
+              } else {
+                button.on('click', function () {
+                  currentPage = parseInt($(this).text(), 10);
+                  populateTable(filteredData, currentPage);
+                  updatePaginationButtons();
+                });
+              }
+              paginationButtons.append(button);
+            }
+          
+            // Add ellipsis if there are pages after the visible range
+            if (endPage < totalPages - 1) {
+              paginationButtons.append($('<span class="ellipsis">').text('...'));
+            }
+          
+            // Add last page button
+            if (totalPages > 1) {
+              var lastPageButton = $('<button class="main-btn2 primary-btn btn-hover">').text(totalPages);
+              lastPageButton.on('click', function () {
+                currentPage = totalPages;
+                populateTable(filteredData, currentPage);
+                updatePaginationButtons();
+              });
+              paginationButtons.append(lastPageButton);
+            }
+          
+            // Add Next button if not on the last page
+            if (currentPage < totalPages) {
+              var nextButton = $('<button class="main-btn2 primary-btn btn-hover">').text('Next');
+              nextButton.on('click', function () {
+                currentPage++;
+                populateTable(filteredData, currentPage);
+                updatePaginationButtons();
+              });
+              paginationButtons.append(nextButton);
+            }
+          }
+          
+  
+       
+         // Function to load JSON data using AJAX
+         function loadJSONData() {
+          // Calculate the total number of unique BP_names (customers)
+          var uniqueCustomers = new Set(jsonData.map(item => item.bp_name));
+          var totalCustomers = uniqueCustomers.size;
+          console.log('Total number of customers: ', totalCustomers);
+          // Display the sum in the <h3> HTML tag
+            var h3Element = document.getElementById('total-customers');
+            h3Element.textContent = totalCustomers;
+            h3Element.classList.add('text-bold');
+
+         jsonData = allData; // Assign the allData to the jsonData variable
+         filteredData = jsonData; // Initialize filteredData with all data initially
+         populateTable(jsonData, currentPage);
+         calculateAccountManagerSales();
+         updatePaginationButtons();
+       }
+       
+       // Function to calculate the total number of unique products
+        function calculateTotalProducts(data) {
+          const uniqueProducts = new Set();
+          data.forEach(function(item) {
+            uniqueProducts.add(item.product);
+          });
+          //print uniqueProducts in console
+          console.log(uniqueProducts);
+          return uniqueProducts.size;
+        }
+
+        // Call the function and get the total number of unique products
+        var totalProducts = calculateTotalProducts(jsonData);
+
+        // Display the total number of products in the <h3> HTML tag
+        var totalProductsElement = document.getElementById('total-products');
+        totalProductsElement.textContent = totalProducts;
+        totalProductsElement.classList.add('text-bold');
+         // Function to calculate total sales for each account manager based on the filtered data
+         function calculateAccountManagerSales() {
+           accountManagerSales = {};
+       
+           filteredData.forEach(function (item) {
+             var salesMonth = item.sales_month.trim();
+             var accountManager = item.account_manager;
+             var totalSales = item.qty * item.price;
+       
+             if (!accountManagerSales[accountManager]) {
+               accountManagerSales[accountManager] = {
+                 totalSales: 0,
+                 products: {},
+                 months: {},
+               };
+             }
+       
+             if (!accountManagerSales[accountManager].products[item.product]) {
+               accountManagerSales[accountManager].products[item.product] = 0;
+             }
+       
+             if (!accountManagerSales[accountManager].months[salesMonth]) {
+               accountManagerSales[accountManager].months[salesMonth] = 0;
+             }
+       
+             accountManagerSales[accountManager].totalSales += totalSales;
+             accountManagerSales[accountManager].products[item.product] += totalSales;
+             accountManagerSales[accountManager].months[salesMonth] += totalSales;
+           });
+       
+           console.log(accountManagerSales); // Display the accountManagerSales object in the console
+       
+           // Update the chart after calculating account manager sales
+         }
+       
+         // Function to filter the table based on the selected filters
+         function filterTable() {
+           var salesMonth = $('#sales-month-filter').val();
+           var accountManager = $('#account-manager-filter').val();
+           var profile = $('#profile-filter').val();
+           var product = $('#product-filter').val();
+           var customerCategory = $('#customer-category-filter').val();
+           var sector = $('#sector-filter').val();
+           var contractStatus = $('#contract-status-filter').val(); 
+
+       
+           filteredData = jsonData.filter(function (item) {
+             return (
+               (salesMonth === '' || item.sales_month.toLowerCase().includes(salesMonth.toLowerCase())) &&
+               (accountManager === '' || item.account_manager.toLowerCase().includes(accountManager.toLowerCase())) &&
+               (profile === '' || item.profile.toLowerCase().includes(profile.toLowerCase())) &&
+               (product === '' || item.product.toLowerCase().includes(product.toLowerCase())) &&
+               (customerCategory === '' || item.customer_category.toLowerCase().includes(customerCategory.toLowerCase())) &&
+               (sector === '' || item.sector.toLowerCase().includes(sector.toLowerCase()))&&      
+               (contractStatus === '' || item.contract_status.toLowerCase().includes(contractStatus.toLowerCase()))
+             );
+           });
+       
+           currentPage = 1; // Reset currentPage to 1 after filtering
+           
+           populateTable(filteredData, currentPage); // Update the table with the filtered data
+           updatePaginationButtons();
+           calculateAccountManagerSales();
+         }
+       
+       
+         // Function to filter the table based on the search keyword
+       function searchTable() {
+         var searchKeyword = $('#search-input').val().toLowerCase();
+     
+         // Filter the jsonData based on the search keyword
+         filteredData = jsonData.filter(function (item) {
+           // Modify the properties you want to search on (e.g., item.district, item.profile, etc.)
+           return (
+             item.district.toLowerCase().includes(searchKeyword) ||
+             item.bp_name.toLowerCase().includes(searchKeyword) ||
+             item.bp_code.toLowerCase().includes(searchKeyword) ||
+             item.supplier.toLowerCase().includes(searchKeyword) ||
+             item.product.toLowerCase().includes(searchKeyword) ||
+             item.item_description.toLowerCase().includes(searchKeyword) ||
+             item.profile.toLowerCase().includes(searchKeyword) ||
+             item.customer_category.toLowerCase().includes(searchKeyword) ||
+             item.sector.toLowerCase().includes(searchKeyword) ||
+             item.sales_month.toLowerCase().includes(searchKeyword) ||
+             item.contract_status.toLowerCase().includes(searchKeyword) ||
+             item.account_manager.toLowerCase().includes(searchKeyword)
+           );
+         });
+     
+         currentPage = 1; // Reset currentPage to 1 after filtering
+         updatePaginationButtons();
+         populateTable(filteredData, currentPage); // Update the table with the filtered data
+         calculateAccountManagerSales();
+       }
+      
+     
+       // Example usage of an input event listener for the search input field
+       $('#search-input').on('input', function () {
+         searchTable();
+       });
+     
+         // Example usage of a filter event listener for a dropdown
+         $('.select-style-1 select').on('change', function () {
+           filterTable();
+         });
+       
+         // Called the function and pass the JSON file path here
+         loadJSONData();
+       });
+       
+     </script>
+     <!--script for openstreet map-->
+     <script>
+      // Initialize the map
+      var allData = JSON.parse('{{ report_data|escapejs }}');
+      var map = L.map('map').setView([-1.9403, 29.8739], 9); // Set the initial center and zoom level
+      var totalSalesByDistrict = {}; // Object to store total sales by district
+      // Add the OpenStreetMap tiles to the map
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      // Function to calculate total sales by district
+        function calculateTotalSalesByDistrict(allData) {
+          allData.forEach(function(data) {
+            var district = data.district.trim();
+
+            if (!totalSalesByDistrict[district]) {
+              totalSalesByDistrict[district] = 0;
+            }
+
+            totalSalesByDistrict[district] += parseInt(data.qty) * parseFloat(data.price);
+          });
+        }
+        // Your markers array
+        var markers = [
+        { lat: -1.9539, lng: 30.0881, district: "Gasabo" },
+        { lat: -1.9517, lng: 30.0584, district: "Nyarugenge" },
+        { lat: -1.9637, lng: 30.1578, district: "Kicukiro" },
+        { lat: -1.9633, lng: 30.1408, district: "Bugesera" },
+        { lat: -1.6703, lng: 30.4317, district: "Gatsibo" },
+        { lat: -2.0614, lng: 29.8417, district: "Kamonyi" },
+        { lat: -1.8657, lng: 30.6229, district: "Kayonza" },
+        { lat: -2.1751, lng: 29.7531, district: "Ngoma" },
+        { lat: -1.7356, lng: 30.4394, district: "Nyagatare" },
+        { lat: -2.4981, lng: 29.575, district: "Nyamagabe" },
+        { lat: -2.7772, lng: 29.7503, district: "Nyanza" },
+        { lat: -2.6846, lng: 30.4878, district: "Nyaruguru" },
+        { lat: -1.7301, lng: 30.0444, district: "Ruhango" },
+        { lat: -1.388, lng: 29.8501, district: "Burera" },
+        { lat: -1.7335, lng: 29.8547, district: "Gakenke" },
+        { lat: -1.6943, lng: 29.5238, district: "Gicumbi" },
+        { lat: -1.5086, lng: 29.6361, district: "Musanze" },
+        { lat: -1.9294, lng: 29.6323, district: "Rulindo" },
+        { lat: -2.1602, lng: 29.364, district: "Karongi" },
+        { lat: -2.0753, lng: 29.5542, district: "Ngororero" },
+        { lat: -2.257, lng: 29.4212, district: "Nyabihu" },
+        { lat: -2.3439, lng: 29.1352, district: "Nyamasheke" },
+        { lat: -1.9521, lng: 29.6028, district: "Rubavu" },
+        { lat: -1.9678, lng: 29.8756, district: "Rusizi" },
+        { lat: -2.4051, lng: 29.2859, district: "Rutsiro" },
+        { lat: -2.0426, lng: 29.5636, district: "Karamea" },
+        { lat: -2.5538, lng: 30.1093, district: "Kirehe" },
+        { lat: -2.1643, lng: 29.8661, district: "Muhanga" },
+        { lat: -2.3598, lng: 29.7445, district: "Nyanza" },
+        { lat: -2.0749, lng: 29.3558, district: "Rwamagana" }
+          // Add more markers as needed for other districts in Rwanda
+        ];
+   // Function to add markers to the map
+   function addMarkers() {
+        markers.forEach(function(marker) {
+        var district = marker.district;
+        var totalSales = totalSalesByDistrict[district] || 0;
+
+        var popupContent = '<b>' + district + '</b><br>' + 'Total Sales: RWF ' + totalSales;
+        var customPopup = L.popup().setContent(popupContent);
+
+        var customIcon = L.icon({
+          iconUrl: "{% static 'assets/images/pin.png' %}", // Replace with the actual path to your icon image
+          iconSize: [32, 32], // Adjust the size of the icon if needed
+        });
+
+        var marker = L.marker([marker.lat, marker.lng], { icon: customIcon }).addTo(map);
+        marker.bindPopup(customPopup);
+
+        marker.on('mouseover', function(e) {
+          this.openPopup();
+        });
+
+        marker.on('mouseout', function(e) {
+          this.closePopup();
+        });
+      });
+          
+        }
+         // Function to load JSON data from a file
+      
+            calculateTotalSalesByDistrict(allData);
+            addMarkers();
+        
+      
+     
+    </script>
+    <!-- script below handles the top selling products table-->
+    <script>
+      var allData = JSON.parse('{{ report_data|escapejs }}');
+      console.log(allData);
+      // Create an object to store the total sales for each product
+      var productSales = {};
+
+      // Loop through each entry in the data and calculate the total sales for each product:
+      for (var i = 0; i < allData.length; i++) {
+        var entry = allData[i];
+        var product = entry.product;
+        var sales = parseFloat(entry.total_sales);
+
+        if (!isNaN(sales)) {
+          if (productSales.hasOwnProperty(product)) {
+            productSales[product] += sales;
+          } else {
+            productSales[product] = sales;
+          }
+        }
+      }
+      // Convert the productSales object into an array of objects for easier sorting:
+      var productSalesArray = [];
+      for (var product in productSales) {
+        if (productSales.hasOwnProperty(product)) {
+          productSalesArray.push({ product: product, totalSales: productSales[product] });
+        }
+      }
+
+      // Sort the productSalesArray based on the total sales in descending order
+      productSalesArray.sort(function(a, b) {
+        return b.totalSales - a.totalSales;
+      });
+
+      // Create an HTML table to display the top 5 best selling products:
+      var table = document.createElement("table");
+      table.classList.add("table", "top-selling-table"); // Add CSS class to the whole table
+
+      // Create table headers
+      var headerRow = table.insertRow();
+      var productHeader = headerRow.insertCell();
+      productHeader.textContent = "Product";
+      productHeader.classList.add("text-sm", "text-medium"); // Add CSS classes to the table header
+
+      var salesHeader = headerRow.insertCell();
+      salesHeader.textContent = "Total Sales";
+      salesHeader.classList.add("text-sm", "text-medium"); // Add CSS classes to the table header
+
+      // Display top 5 best selling products
+      for (var i = 0; i < 5 && i < productSalesArray.length; i++) {
+        var row = table.insertRow();
+        var productCell = row.insertCell();
+        productCell.textContent = productSalesArray[i].product;
+        productCell.classList.add("text-sm"); // Add CSS class to the product cell
+
+        var salesCell = row.insertCell();
+        salesCell.textContent = productSalesArray[i].totalSales.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        salesCell.classList.add("text-sm"); // Add CSS class to the sales cell
+      }
+
+      // Append the table to a container in your HTML, e.g., with an id of "reportContainer"
+      var reportContainer = document.getElementById("reportContainer");
+      reportContainer.appendChild(table);
+
+    </script>
+    <!--This handles the monthly table-->
+    <script>
+      
+    </script>
+    
+    </body>
+</html>
