@@ -142,134 +142,81 @@
           <!-- End Row -->
 
           <!-- FILTERS -->
-          <div class="row" id="targetDiv">
-            <div class="col-lg-12">
-              <div class="card-style mb-30">
-                <!-- Use "d-flex" to create a flex container and "flex-wrap" to wrap the items to the next line if necessary. -->
-                <div class="d-flex flex-wrap align-items-center justify-content-between">
-                  <!-- "mb-2" adds margin-bottom to create spacing between the filters. -->
-                  <div class="select-style-1 mb-2">
-                    <div class="select-position select-sm">
-                      <label for="sales-month-filter">Sales Month:</label>
-                      <!-- The "light-bg" class is used for styling purposes. -->
-                      <select id="sales-month-filter" class="light-bg">
-                        <!-- Options for Sales Month -->
-                        <option value="">All</option>
-                        <option value="January">January</option>
-                        <option value="February">February</option>
-                        <option value="March">March</option>
-                        <option value="April">April</option>
-                        <option value="May">May</option>
-                        <option value="June">June</option>
-                        <option value="July">July</option>
-                        <option value="August">August</option>
-                        <option value="September">September</option>
-                        <option value="October">October</option>
-                        <option value="November">November</option>
-                        <option value="December">December</option>
-                      </select>
+          <form action="{% url 'overview' %}" method="get">
+            <div class="row" id="targetDiv">
+              <div class="col-lg-12">
+                <div class="card-style mb-30">
+                  <!-- Use "d-flex" to create a flex container and "flex-wrap" to wrap the items to the next line if necessary. -->
+                  <div class="d-flex flex-wrap align-items-center justify-content-between">
+                    <!-- "mb-2" adds margin-bottom to create spacing between the filters. -->
+                    <div class="select-style-1 mb-2">
+                      <div class="select-position select-sm">
+                        <label for="sales-month-filter">Month:</label>
+                        <!-- The "light-bg" class is used for styling purposes. -->
+                        <select id="sales-month-filter" class="light-bg">
+                          <!-- Options for Sales Month -->
+                          <option value="">All</option>
+                          <option value="January">January</option>
+                          <option value="February">February</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-          
-                  <!-- Repeat the same structure for other filters. -->
-                  <div class="select-style-1 mb-2">
-                    <div class="select-position select-sm">
-                      <label for="account-manager-filter">Account Manager:</label>
-                      <select id="account-manager-filter" class="light-bg">
-                        <!-- Options for Account Manager -->
-                        <option value="">All</option>
-                        {% for account_manager in account_managers %}
-                          <option value="{{ account_manager }}">{{ account_manager }}</option>
-                        {% endfor %}
-                      </select>
+            
+                    <!-- Repeat the same structure for other filters. -->
+                    <div class="select-style-1 mb-2">
+                      <div class="select-position select-sm">
+                        <label for="bank_name">Bank:</label>
+                        <select name="bank_name" class="light-bg">
+                          <!-- Options for Profile -->
+                          <option value="">All</option>
+                          <option value="equity_bank">Equity Bank</option>
+                          <option value="bk">BK</option>
+                          <option value="ecobank">Ecobank</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-          
-                  <div class="select-style-1 mb-2">
-                    <div class="select-position select-sm">
-                      <label for="profile-filter">Profile:</label>
-                      <select id="profile-filter" class="light-bg">
-                        <!-- Options for Profile -->
-                        <option value="">All</option>
-                        <option value="Government">Government</option>
-                        <option value="Private">Private</option>
-                      </select>
+            
+                    <div class="select-style-1 mb-2">
+                      <div class="select-position select-sm">
+                        <label for="transaction_type">Transaction Type:</label>
+                        <select name="transaction_type" class="light-bg">
+                          <!-- Options for Profile -->
+                          <option value="">All</option>
+                          <option value="deposit">Deposit</option>
+                          <option value="withdrawal">Withdraw</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-          
-                  <!-- Add the "col-*" class to control the width of the Product filter. Here, "col-3" is used, but adjust as needed. -->
-                  <div class="select-style-1 mb-2 col-3">
-                    <div class="select-position select-sm">
-                      <label for="product-filter">Product:</label>
-                      <select id="product-filter" class="light-bg">
-                        <!-- Options for Product -->
-                        <option value="">All</option>
-                        {% for product in products %}
-                          <option value="{{ product }}">{{ product }}</option>
-                        {% endfor %}
-                      </select>
+            
+                    
+                    
+                    <div class="select-style-1 mb-2">
+                      <div class="select-position select-sm">
+                        <label for="start_date">Date:</label>
+                        <select name="start_date" class="light-bg">
+                          <!-- Options for Customer Category -->
+                          <option value="">All</option>
+                          <option value="Standard">From</option>
+                          <option value="VIP">To</option>
+                        </select>
+                      </div>
                     </div>
+                    <button type="submit" class="main-btn primary-btn btn-hover">Filter</button>
                   </div>
-                  
-                  <div class="select-style-1 mb-2">
-                    <div class="select-position select-sm">
-                      <label for="customer-category-filter">Customer Category:</label>
-                      <select id="customer-category-filter" class="light-bg">
-                        <!-- Options for Customer Category -->
-                        <option value="">All</option>
-                        <option value="Standard">Standard</option>
-                        <option value="VIP">VIP</option>
-                      </select>
-                    </div>
-                  </div>
-          
-                  <div class="select-style-1 mb-2">
-                    <div class="select-position select-sm">
-                      <label for="sector-filter">Sector:</label>
-                      <select id="sector-filter" class="light-bg">
-                        <!-- Options for Sector -->
-                        <option value="">All</option>
-                        <option value="CENTRAL GOV">CENTRAL GOV</option>
-                        <option value="ENTERPRISE">ENTERPRISE</option>
-                        <option value="HOSPITALITY">HOSPITALITY</option>
-                        <option value="AIR">AIR</option>
-                        <option value="TECH">TECH</option>
-                        <option value="FINANCIAL">FINANCIAL</option>
-                        <option value="EDUCATION">EDUCATION</option>
-                        <option value="HEALTH">HEALTH</option>
-                        <option value="NGO">NGO</option>
-                        <option value="SECURITY">SECURITY</option>
-                        <option value="PARASTATAL">PARASTATAL</option>
-                        <option value="BUSINESS">BUSINESS</option>
-                        <option value="BANK">BANK</option>
-                        <option value="EMBASSY">EMBASSY</option>
-                        <option value="INSURANCE">INSURANCE</option>
-                        <option value="LOGISTICS">LOGISTICS</option>
-                        <option value="JUDICIARY">JUDICIARY</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="select-style-1 mb-2">
-                    <div class="select-position select-sm">
-                      <label for="contract-status-filter">Contract Status:</label>
-                      <select id="contract-status-filter" class="light-bg">
-                        <!-- Options for Contract Status -->
-                        <option value="">All</option>
-                        <option value="Expired">Expired</option>
-                        <option value="Expires < 30 days">Expires < 30 days</option>
-                        <option value="Expires < 60 days">Expires < 60 days</option>
-                        <option value="Valid Contract">Valid Contract</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  
-                  
                 </div>
               </div>
             </div>
-          </div>
+          </form>
 
           <!--all sales-->
           <div class="row">
@@ -285,7 +232,7 @@
                "
              >
                <div class="left">
-                 <h6 class="text-medium mb-30">Sales History</h6>
+                 <h6 class="text-medium mb-30">Bank Transactions</h6>
                </div>
                
              </div>
@@ -295,92 +242,41 @@
                <table id="data-table" class="table top-selling-table">
                  <thead>
                    <tr>
-                     <th>
-                       <h6 class="text-sm text-medium">ID</h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         BP Code 
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         BP Name
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         District 
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Profile
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">Sector</h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Customer Category 
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Supplier 
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Product
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Item Description
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">Qty</h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Price 
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Total Sales
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Month 
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         End date
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">Agreement days</h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Contract Status 
-                       </h6>
-                     </th>
-                     <th class="min-width">
-                       <h6 class="text-sm text-medium">
-                         Account Manager 
-                       </h6>
-                     </th>
+                     <th><h6 class="text-sm text-medium">Bank Name</h6></th>
+                     <th class="min-width"><h6 class="text-sm text-medium">Transaction Type</h6></th>
+                     <th class="min-width"><h6 class="text-sm text-medium">Client Name</h6></th>
+                     <th class="min-width"><h6 class="text-sm text-medium">Amount</h6></th>
+                     <th class="min-width"><h6 class="text-sm text-medium">Date </h6></th>
                    </tr>
                  </thead>
                  <tbody>
                    <!-- table rows will be dynamically added using JavaScript -->
+                   {% for transaction in transactions %}
+                   <tr>
+                     <td class="min-width"><p><a href="#0">{{ transaction.bank_name }}</a></p></td>
+                     <td class="min-width"><p>{{ transaction.transaction_type }}</p></td>
+                     <td class="min-width"><p>{{ transaction.client_name }}</p></td>
+                     <td class="min-width"><p>{{ transaction.amount }}</p></td>
+                     <td class="min-width"><p>{{ transaction.date }}</p></td>
+                   </tr>
+                   {% endfor %}
+                   <!-- <tr>
+                    <td class="min-width">
+                      <p><a href="#0">Equity Bank</a></p>
+                    </td>
+                    <td class="min-width">
+                      <p>Deposit</p>
+                    </td>
+                    <td class="min-width">
+                      <p>John</p>
+                    </td>
+                    <td class="min-width">
+                      <p>10000</p>
+                    </td>
+                    <td class="min-width">
+                      <p>11-11-2019</p>
+                    </td>
+                  </tr> -->
                  </tbody>
                </table>
                <!-- End Table -->
@@ -391,183 +287,9 @@
        </div>
 
 
+       
 
-
-
-          <div class="row">
-            <div class="col-lg-7">
-              <div class="card-style mb-30">
-                <div class="title d-flex flex-wrap justify-content-between">
-                  <div class="left">
-                    <h6 class="text-medium mb-10">Yearly Income</h6>
-                    <h3 class="text-bold" id="total-sales2"></h3><br>
-                  </div>
-                  
-                </div>
-                <!-- End Title -->
-                <div class="chart">
-                  <canvas
-                    id="Chart1"
-                    style="width: 100%; height: 400px"
-                  ></canvas>
-                </div>
-                <!-- End Chart -->
-              </div>
-            </div>
-            <!-- End Col -->
-            <div class="col-lg-5">
-              <div class="card-style mb-30">
-                <div
-                  class="
-                    title
-                    d-flex
-                    flex-wrap
-                    align-items-center
-                    justify-content-between
-                  "
-                >
-                  <div class="left">
-                    <h6 class="text-medium mb-2">Actual Sales vs Target</h6>
-                  </div>
-                 
-                </div>
-                <!-- End Title -->
-                <div class="chart">
-                  <canvas
-                    id="salesTargetsChart"
-                    style="width: 100%; height: 420px"
-                  ></canvas>
-                </div>
-                <!-- End Chart -->
-              </div>
-            </div>
-            <!--The div below is not needed but when removed it causes some disturbance on other charts hence why it is visually-hidden-->
-            <div class="col-lg-5 visually-hidden">
-              <div class="card-style mb-30">
-                <div
-                  class="
-                    title
-                    d-flex
-                    flex-wrap
-                    align-items-center
-                    justify-content-between
-                  "
-                >
-                  <div class="left">
-                    <h6 class="text-medium mb-30">Sales/Revenue</h6>
-                  </div>
-                  <div class="right">
-                    <div class="select-style-1">
-                      <div class="select-position select-sm">
-                        <select class="light-bg">
-                          <option value="">Yearly</option>
-                          <option value="">Monthly</option>
-                          <option value="">Weekly</option>
-                        </select>
-                      </div>
-                    </div>
-                    <!-- end select -->
-                  </div>
-                </div>
-                <!-- End Title -->
-                <div class="chart">
-                  <canvas
-                    id="Chart2"
-                    style="width: 100%; height: 400px"
-                  ></canvas>
-                </div>
-                <!-- End Chart -->
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Row -->
           
-          <!-- End Row -->
-          <div class="row">
-   <!--The div below is not needed but when removed it causes some disturbance on other charts hence why it is visually-hidden-->
-            <div class="col-lg-7 visually-hidden">
-              <div class="card-style mb-30">
-                <div
-                  class="
-                    title
-                    d-flex
-                    flex-wrap
-                    align-items-center
-                    justify-content-between
-                  "
-                >
-                  <div class="left">
-                    <h6 class="text-medium mb-2">Sales Forecast</h6>
-                  </div>
-                  <div class="right">
-                    <div class="select-style-1 mb-2">
-                      <div class="select-position select-sm">
-                        <select class="light-bg">
-                          <option value="">Last Month</option>
-                          <option value="">Last 3 Months</option>
-                          <option value="">Last Year</option>
-                        </select>
-                      </div>
-                    </div>
-                    <!-- end select -->
-                  </div>
-                </div>
-                <!-- End Title -->
-                <div class="chart">
-                  <div id="legend3">
-                    <ul
-                      class="legend3 d-flex flex-wrap align-items-center mb-30"
-                    >
-                      <li>
-                        <div class="d-flex">
-                          <span class="bg-color primary-bg"> </span>
-                          <div class="text">
-                            <p class="text-sm text-success">
-                              <span class="text-dark">Revenue</span> +25.55%
-                              <i class="lni lni-arrow-up"></i>
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="d-flex">
-                          <span class="bg-color purple-bg"></span>
-                          <div class="text">
-                            <p class="text-sm text-success">
-                              <span class="text-dark">Net Profit</span> +45.55%
-                              <i class="lni lni-arrow-up"></i>
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="d-flex">
-                          <span class="bg-color orange-bg"></span>
-                          <div class="text">
-                            <p class="text-sm text-danger">
-                              <span class="text-dark">Order</span> -4.2%
-                              <i class="lni lni-arrow-down"></i>
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                  <canvas
-                    id="Chart3"
-                    style="width: 100%; height: 450px"
-                  ></canvas>
-                </div>
-              </div>
-            </div>
-            <!-- End Col -->
-           
-            <!-- End Col -->
-          </div>
-          <!-- End Row -->
-          
-        <!-- end container -->
       </section>
       <!-- ========== section end ========== -->
 

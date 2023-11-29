@@ -4,6 +4,7 @@ from django.template import loader
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
+from .models import *
 # Create your views here.
 
 def login(request):  
@@ -41,6 +42,30 @@ def signup(request):
     return render(request, 'cre/signup.html')
 
 
+# def overview(request):
+#   template = loader.get_template('ui/test2.html')
+#   return HttpResponse(template.render())
+
 def overview(request):
-  template = loader.get_template('ui/test2.html')
-  return HttpResponse(template.render())
+    # Get filter parameters from GET request
+    bank_name = request.GET.get('bank_name')
+    transaction_type = request.GET.get('transaction_type')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    # Get all transactions by default
+    transactions = BankTransaction.objects.all()
+
+    # Apply filters based on parameters
+    if bank_name:
+        transactions = transactions.filter(bank_name=bank_name)
+    if transaction_type:
+        transactions = transactions.filter(transaction_type=transaction_type)
+    if start_date:
+        transactions = transactions.filter(date__gte=start_date)
+    if end_date:
+        transactions = transactions.filter(date__lte=end_date)
+
+    template = 'ui/test2.html'
+    context = {'transactions': transactions}
+    return render(request, template, context)

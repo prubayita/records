@@ -4,7 +4,12 @@ from django.db import models
 # models.py
 
 class BankTransaction(models.Model):
-    bank_name = models.CharField(max_length=255)
+    BANK_CHOICES = [
+        ('equity_bank', 'Equity Bank'),
+        ('bk', 'BK'),
+        ('ecobank', 'Ecobank'),
+    ]
+    bank_name = models.CharField(max_length=255, choices=BANK_CHOICES)
     transaction_type = models.CharField(max_length=10, choices=[('deposit', 'Deposit'), ('withdrawal', 'Withdrawal')])
     client_name = models.CharField(max_length=255)
     client_id_passport = models.CharField(max_length=255)

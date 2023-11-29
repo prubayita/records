@@ -1,0 +1,30 @@
+<!-- ui/test2.html -->
+<form method="GET" action="{% url 'overview' %}">
+    <label for="bank_name">Bank Name:</label>
+    <select id="bank_name" name="bank_name">
+        <option value="">All Banks</option>
+        <option value="equity_bank">Equity Bank</option>
+        <option value="bk">BK</option>
+        <option value="ecobank">Ecobank</option>
+    </select>
+
+    <label for="transaction_type">Transaction Type:</label>
+    <select id="transaction_type" name="transaction_type">
+        <option value="">All Types</option>
+        <option value="deposit">Deposit</option>
+        <option value="withdrawal">Withdrawal</option>
+    </select>
+
+    <label for="start_date">Start Date:</label>
+    <input type="date" id="start_date" name="start_date">
+
+    <label for="end_date">End Date:</label>
+    <input type="date" id="end_date" name="end_date">
+
+    <button type="submit">Apply Filters</button>
+</form>
+
+{% for transaction in transactions %}
+    <!-- Display transaction details as needed -->
+    {{ transaction.bank_name }} - {{ transaction.transaction_type }} - {{ transaction.client_name }} - {{ transaction.amount }} - {{ transaction.date }}
+{% endfor %}
