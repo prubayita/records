@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Transaction</title>
+</head>
+<body>
+    <h2>Create a New Transaction</h2>
+    <form method="post" action="{% url 'record' %}">
+        {% csrf_token %}
+        <label for="bank_name">Bank Name:</label>
+        <input type="text" id="bank_name" name="bank_name" required>
+
+        <label for="transaction_type">Transaction Type:</label>
+        <select id="transaction_type" name="transaction_type" required>
+            <option value="deposit">Deposit</option>
+            <option value="withdrawal">Withdrawal</option>
+        </select>
+
+        <label for="client_name">Client Name:</label>
+        <input type="text" id="client_name" name="client_name" required>
+
+        <label for="client_id_passport">Client ID/Passport:</label>
+        <input type="text" id="client_id_passport" name="client_id_passport" required>
+
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+{% endblock content %}

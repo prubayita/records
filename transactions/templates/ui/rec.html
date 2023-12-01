@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+<main class="main-wrapper">
+
+  <!-- ========== header end ========== -->
+
+  <div class="form-container">
+      <section class="table-components">
+      <div class="col-lg-6">
+        <div class="card-style settings-card-2 mb-30">
+          {% include 'partials/alerts.html' %}
+          <div class="title mb-30">
+            <h6>Register</h6>
+          </div>
+          <form method="post" id="register-form" action="{% url 'record' %}">
+            {% csrf_token %}
+            <div class="row">
+              <!-- Move ID/Passport Number field and add the search button -->
+                <div class="select-style-1">
+                    <label for="bank_name">Bank Name</label>
+                    <div class="select-position">
+                    <select name="bank_name"  required>
+                        <option value="">Select Bank</option>
+                        <option value="equity_bank">Equity Bank</option>
+                        <option value="bk">BK</option>
+                        <option value="ecobank">Ecobank</option>
+                    </select>
+                    </div>
+                </div>
+                <div class="select-style-1">
+                    <label for="transaction_type">Transaction Type</label>
+                    <div class="select-position">
+                      <select name="transaction_type"  required>
+                        <option value="">Select Transaction Type</option>
+                        <option value="deposit">Deposit</option>
+                        <option value="withdrawal">Withdraw</option>
+                      </select>
+                    </div>
+                  </div>        
+                <div class="col-12">
+                    <div class="input-style-1">
+                        <label for="client_name">Client Name</label>
+                        <input type="text" placeholder="Full Name" name="client_name" id="client_name" required />
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="input-style-1">
+                        <label for="client_id_passport">Client ID/Passport</label>
+                        <input type="text" placeholder="Client ID/Passport" name="client_id_passport" id="client_id_passport" required />
+                    </div>
+                </div>
+
+
+            
+                <div class="col-12">
+                    <div class="input-style-1">
+                    <label for="amount">Amount</label>
+                    <input type="number" placeholder="Amount" name="amount" id="amount" required />
+                    </div>
+                </div>              
+                <div class="col-12">
+                    <button type="submit" class="main-btn primary-btn btn-hover">
+                    Register
+                    </button>
+                </div>
+            </div>
+          </form>
+          
+        </div>
+        <!-- end card -->
+      </div>
+      </section>
+
+  </div>
+</main>
+
+{% endblock content %}

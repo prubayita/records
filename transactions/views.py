@@ -69,3 +69,26 @@ def overview(request):
     template = 'ui/test2.html'
     context = {'transactions': transactions}
     return render(request, template, context)
+
+def record(request):
+    if request.method == 'POST':
+        # Retrieve data from the form
+        bank_name = request.POST.get('bank_name')
+        transaction_type = request.POST.get('transaction_type')
+        client_name = request.POST.get('client_name')
+        client_id_passport = request.POST.get('client_id_passport')
+        amount = request.POST.get('amount')
+
+        # Create a new BankTransaction instance and save it
+        BankTransaction.objects.create(
+            bank_name=bank_name,
+            transaction_type=transaction_type,
+            client_name=client_name,
+            client_id_passport=client_id_passport,
+            amount=amount
+        )
+
+        return redirect('overview')  # Redirect to the overview page or any other page
+
+    template = 'ui/rec.html'
+    return render(request, template)

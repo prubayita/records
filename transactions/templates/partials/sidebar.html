@@ -9,7 +9,7 @@
 <aside class="sidebar-nav-wrapper">
     <div class="navbar-logo">
       <a href="{% url 'overview' %}">
-        <img class="logo" src="{% static 'BSCLOGO1.png' %}" alt="logo" />
+        <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/BMW_logo_%28gray%29.svg/900px-BMW_logo_%28gray%29.svg.png" alt="logo" />
       </a>
     </div>
     <nav class="sidebar-nav">
@@ -34,12 +34,16 @@
           </a>
           <ul id="ddmenu_1" class="collapse show dropdown-nav">
             <li>
-              <a href="#" class="active">Overview </a>
+              <a href="{% url 'overview' %}" class="active">Overview </a>
+            </li>
+            <li>
+              <a href="{% url 'record' %}" class="">New Record </a>
             </li>
             
             <!-- <li>
               <a href="{% url 'overview' %}">Overview </a>
             </li> -->
+            <!-- {# This is a comment in Jinja 
             {% if request.user.groups.all.0.name  == 'Teller' or request.user.groups.all.0.name == 'Supervisor'  %}
             <li>
               <a href="{% url 'overview' %}" {% if request.path == "/overview/" %} class="active" {% endif %}> Record Visitor </a>
@@ -58,7 +62,7 @@
             <li>
               <a href="{% url 'overview' %}" {% if request.path == "/overview/" %} class="active" {% endif %}> Logs </a>
             </li>
-            {% endif %}
+            {% endif %} #} -->
           </ul>
         </li>
         
