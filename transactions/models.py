@@ -21,6 +21,7 @@ class MoneyTransferTransaction(models.Model):
         ('western_union', 'Western Union'),
         ('moneygram', 'MoneyGram'),
         ('mpesa', 'M-Pesa'),
+        ('dubai', 'Dubai'),
     ]
 
     sender_name = models.CharField(max_length=255)

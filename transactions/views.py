@@ -70,7 +70,7 @@ def overview(request):
     context = {'transactions': transactions}
     return render(request, template, context)
 
-def record(request):
+def bank_record(request):
     if request.method == 'POST':
         # Retrieve data from the form
         bank_name = request.POST.get('bank_name')
@@ -91,4 +91,27 @@ def record(request):
         return redirect('overview')  # Redirect to the overview page or any other page
 
     template = 'ui/rec.html'
+    return render(request, template)
+
+def mt_record(request):
+    if request.method == 'POST':
+        # Retrieve data from the form
+        sender_name = request.POST.get('sender_name')
+        sender_id_passport = request.POST.get('sender_id_passport')
+        transaction_type = request.POST.get('transaction_type')
+        location = request.POST.get('location')
+        company = request.POST.get('company')
+
+        # Create a new MoneyTransferTransaction instance and save it
+        MoneyTransferTransaction.objects.create(
+            sender_name=sender_name,
+            sender_id_passport=sender_id_passport,
+            transaction_type=transaction_type,
+            location=location,
+            company=company
+        )
+
+        return redirect('overview')  # Redirect to the overview page for money transfer transactions
+
+    template = 'ui/mt_rec.html'  
     return render(request, template)
