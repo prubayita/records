@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from .models import *
+from django.db.models import Sum
 # Create your views here.
 
 def login(request):  
@@ -14,7 +15,7 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect('overview')  # Redirect to the desired page after successful login
+            return redirect('bank_overview')  # Redirect to the desired page after successful login
         else:
             messages.error(request, 'Invalid username or password.')
             return redirect('login')
@@ -46,7 +47,7 @@ def signup(request):
 #   template = loader.get_template('ui/test2.html')
 #   return HttpResponse(template.render())
 
-def overview(request):
+def bank_overview(request):
     # Get filter parameters from GET request
     bank_name = request.GET.get('bank_name')
     transaction_type = request.GET.get('transaction_type')
@@ -65,9 +66,40 @@ def overview(request):
         transactions = transactions.filter(date__gte=start_date)
     if end_date:
         transactions = transactions.filter(date__lte=end_date)
+    
+    total_amount = transactions.aggregate(Sum('amount'))['amount__sum']
 
     template = 'ui/test2.html'
-    context = {'transactions': transactions}
+    context = {'transactions': transactions, 'total_amount': total_amount}
+    return render(request, template, context)
+
+def mt_overview(request):
+    # Get filter parameters from GET request
+    company = request.GET.get('company')
+    sender_name = request.GET.get('sender_name')
+    transaction_type = request.GET.get('transaction_type')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    # Get all money transfer transactions by default
+    transactions = MoneyTransferTransaction.objects.all()
+
+    # Apply filters based on parameters
+    if company:
+        transactions = transactions.filter(company=company)
+    if sender_name:
+        transactions = transactions.filter(sender_name=sender_name)
+    if transaction_type:
+        transactions = transactions.filter(transaction_type=transaction_type)
+    if start_date:
+        transactions = transactions.filter(date__gte=start_date)
+    if end_date:
+        transactions = transactions.filter(date__lte=end_date)
+
+    total_amount = transactions.aggregate(Sum('amount'))['amount__sum']
+
+    template = 'ui/mt_overview.html'  # Adjust the template path accordingly
+    context = {'transactions': transactions, 'total_amount': total_amount}
     return render(request, template, context)
 
 def bank_record(request):
@@ -101,6 +133,7 @@ def mt_record(request):
         transaction_type = request.POST.get('transaction_type')
         location = request.POST.get('location')
         company = request.POST.get('company')
+        amount = request.POST.get('amount')
 
         # Create a new MoneyTransferTransaction instance and save it
         MoneyTransferTransaction.objects.create(
@@ -108,7 +141,8 @@ def mt_record(request):
             sender_id_passport=sender_id_passport,
             transaction_type=transaction_type,
             location=location,
-            company=company
+            company=company,
+            amount=amount
         )
 
         return redirect('overview')  # Redirect to the overview page for money transfer transactions

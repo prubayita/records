@@ -8,7 +8,7 @@
     <!-- ======== sidebar-nav start =========== -->
 <aside class="sidebar-nav-wrapper">
     <div class="navbar-logo">
-      <a href="{% url 'overview' %}">
+      <a href="{% url 'bank_overview' %}">
         <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/BMW_logo_%28gray%29.svg/900px-BMW_logo_%28gray%29.svg.png" alt="logo" />
       </a>
     </div>
@@ -34,33 +34,33 @@
           </a>
           <ul id="ddmenu_1" class="collapse show dropdown-nav">
             <li>
-              <a href="{% url 'overview' %}" class="active">Overview </a>
+              <a href="{% url 'bank_overview' %}" class="active">Bank Transactions Overview </a>
             </li>
             <li>
-              <a href="{% url 'bank_record' %}" class="">New Record </a>
+              <a href="{% url 'mt_overview' %}" class="">Money Transfer Overview </a>
             </li>
             
             <!-- <li>
-              <a href="{% url 'overview' %}">Overview </a>
+              {#<a href="{% url 'bank_overview' %}">bank_overview </a>#}
             </li> -->
             <!-- {# This is a comment in Jinja 
             {% if request.user.groups.all.0.name  == 'Teller' or request.user.groups.all.0.name == 'Supervisor'  %}
             <li>
-              <a href="{% url 'overview' %}" {% if request.path == "/overview/" %} class="active" {% endif %}> Record Visitor </a>
+              <a href="{% url 'bank_overview' %}" {% if request.path == "/bank_overview/" %} class="active" {% endif %}> Record Visitor </a>
             </li>            
             <li>
-              <a href="{% url 'overview' %}" {% if request.path == "/overview/" %} class="active" {% endif %}> Waiting List </a>
+              <a href="{% url 'bank_overview' %}" {% if request.path == "/bank_overview/" %} class="active" {% endif %}> Waiting List </a>
             </li>
             <li>
-              <a href="{% url 'overview' %}" {% if request.path == "/overview/" %} class="active" {% endif %}> Movement </a>
+              <a href="{% url 'bank_overview' %}" {% if request.path == "/bank_overview/" %} class="active" {% endif %}> Movement </a>
             </li>
             {% endif %}
             {% if request.user.groups.all.0.name == 'Supervisor'  %}
             <li>
-              <a href="{% url 'overview' %}" {% if request.path == "/overview/" %} class="active" {% endif %}> All Visitors </a>
+              <a href="{% url 'bank_overview' %}" {% if request.path == "/bank_overview/" %} class="active" {% endif %}> All Visitors </a>
             </li>
             <li>
-              <a href="{% url 'overview' %}" {% if request.path == "/overview/" %} class="active" {% endif %}> Logs </a>
+              <a href="{% url 'bank_overview' %}" {% if request.path == "/bank_overview/" %} class="active" {% endif %}> Logs </a>
             </li>
             {% endif %} #} -->
           </ul>
