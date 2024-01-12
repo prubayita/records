@@ -3,6 +3,7 @@
 {% load humanize %}
 {% load static %}
 {% block content %}
+
    <style>
     .main-btn2 {
   display: inline-block;
@@ -202,13 +203,11 @@
                     
                     <div class="select-style-1 mb-2">
                       <div class="select-position select-sm">
-                        <label for="start_date">Date:</label>
-                        <select name="start_date" class="light-bg">
-                          <!-- Options for Customer Category -->
-                          <option value="">All</option>
-                          <option value="Standard">From</option>
-                          <option value="VIP">To</option>
-                        </select>
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" name="start_date" id="start_date" class="form-control" >
+                    
+                        <label for="end_date">End Date:</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control">
                       </div>
                     </div>
                     <button type="submit" class="main-btn primary-btn btn-hover">Filter</button>
@@ -309,6 +308,25 @@
         $('#targetDiv').toggle();
         });
         });
+    </script>
+
+    <!-- Initialize datepicker -->
+    <script>
+      // Assuming you want to initialize the datepicker for start_date and end_date inputs
+      const startDateInput = document.getElementById('start_date');
+      const endDateInput = document.getElementById('end_date');
+
+      // You can customize the options based on your needs
+      const datepickerOptions = {
+          format: 'dd/mm/yyyy', // Specify the desired date format
+          autohide: true,
+      };
+
+      // Initialize datepicker for start_date
+      datepicker(startDateInput, datepickerOptions);
+
+      // Initialize datepicker for end_date
+      datepicker(endDateInput, datepickerOptions);
     </script>
   
 
