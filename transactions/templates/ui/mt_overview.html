@@ -282,7 +282,24 @@
                </table>
                <p>Total Amount: <span class="fw-bold">{{ total_amount|intcomma }}</span> </p>
                <!-- End Table -->
-               <div id="pagination-buttons" class="pagination-buttons d-flex justify-content-center"></div>
+               <div class="pagination">
+                <span class="step-links">
+                    {% if transactions.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ transactions.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ transactions.number }} of {{ transactions.paginator.num_pages }}.
+                    </span>
+            
+                    {% if transactions.has_next %}
+                        <a href="?page={{ transactions.next_page_number }}">next</a>
+                        <a href="?page={{ transactions.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+               <!-- <div id="pagination-buttons" class="pagination-buttons d-flex justify-content-center"></div> -->
              </div>
            </div>
          </div>

@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from .models import *
 from django.db.models import Sum
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 # Create your views here.
 
 def login(request):  
@@ -47,17 +49,40 @@ def signup(request):
 #   template = loader.get_template('ui/test2.html')
 #   return HttpResponse(template.render())
 
+# def bank_overview(request):
+#     # Get filter parameters from GET request
+#     bank_name = request.GET.get('bank_name')
+#     transaction_type = request.GET.get('transaction_type')
+#     start_date = request.GET.get('start_date')
+#     end_date = request.GET.get('end_date')
+
+#     # Get all transactions by default
+#     transactions = BankTransaction.objects.all()
+
+#     # Apply filters based on parameters
+#     if bank_name:
+#         transactions = transactions.filter(bank_name=bank_name)
+#     if transaction_type:
+#         transactions = transactions.filter(transaction_type=transaction_type)
+#     if start_date:
+#         transactions = transactions.filter(date__gte=start_date)
+#     if end_date:
+#         transactions = transactions.filter(date__lte=end_date)
+    
+#     total_amount = transactions.aggregate(Sum('amount'))['amount__sum']
+
+#     template = 'ui/test2.html'
+#     context = {'transactions': transactions, 'total_amount': total_amount}
+#     return render(request, template, context)
+
 def bank_overview(request):
-    # Get filter parameters from GET request
     bank_name = request.GET.get('bank_name')
     transaction_type = request.GET.get('transaction_type')
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
-    # Get all transactions by default
     transactions = BankTransaction.objects.all()
 
-    # Apply filters based on parameters
     if bank_name:
         transactions = transactions.filter(bank_name=bank_name)
     if transaction_type:
@@ -66,12 +91,52 @@ def bank_overview(request):
         transactions = transactions.filter(date__gte=start_date)
     if end_date:
         transactions = transactions.filter(date__lte=end_date)
-    
-    total_amount = transactions.aggregate(Sum('amount'))['amount__sum']
+
+    # Pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(transactions, 10)  # Show 10 transactions per page
+
+    try:
+        transactions = paginator.page(page)
+    except PageNotAnInteger:
+        transactions = paginator.page(1)
+    except EmptyPage:
+        transactions = paginator.page(paginator.num_pages)
+
+    total_amount = transactions.object_list.aggregate(Sum('amount'))['amount__sum']
 
     template = 'ui/test2.html'
     context = {'transactions': transactions, 'total_amount': total_amount}
     return render(request, template, context)
+
+# def mt_overview(request):
+#     # Get filter parameters from GET request
+#     company = request.GET.get('company')
+#     sender_name = request.GET.get('sender_name')
+#     transaction_type = request.GET.get('transaction_type')
+#     start_date = request.GET.get('start_date')
+#     end_date = request.GET.get('end_date')
+
+#     # Get all money transfer transactions by default
+#     transactions = MoneyTransferTransaction.objects.all()
+
+#     # Apply filters based on parameters
+#     if company:
+#         transactions = transactions.filter(company=company)
+#     if sender_name:
+#         transactions = transactions.filter(sender_name=sender_name)
+#     if transaction_type:
+#         transactions = transactions.filter(transaction_type=transaction_type)
+#     if start_date:
+#         transactions = transactions.filter(date__gte=start_date)
+#     if end_date:
+#         transactions = transactions.filter(date__lte=end_date)
+
+#     total_amount = transactions.aggregate(Sum('amount'))['amount__sum']
+
+#     template = 'ui/mt_overview.html'  # Adjust the template path accordingly
+#     context = {'transactions': transactions, 'total_amount': total_amount}
+#     return render(request, template, context)
 
 def mt_overview(request):
     # Get filter parameters from GET request
@@ -96,11 +161,23 @@ def mt_overview(request):
     if end_date:
         transactions = transactions.filter(date__lte=end_date)
 
-    total_amount = transactions.aggregate(Sum('amount'))['amount__sum']
+    # Pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(transactions, 10)  # Show 10 transactions per page
+
+    try:
+        transactions = paginator.page(page)
+    except PageNotAnInteger:
+        transactions = paginator.page(1)
+    except EmptyPage:
+        transactions = paginator.page(paginator.num_pages)
+
+    total_amount = transactions.object_list.aggregate(Sum('amount'))['amount__sum']
 
     template = 'ui/mt_overview.html'  # Adjust the template path accordingly
     context = {'transactions': transactions, 'total_amount': total_amount}
     return render(request, template, context)
+
 
 def bank_record(request):
     if request.method == 'POST':
