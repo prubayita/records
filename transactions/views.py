@@ -4,6 +4,8 @@ from django.template import loader
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.decorators import login_required
+from .decorators import *
 from .models import *
 from django.db.models import Sum
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -74,7 +76,8 @@ def signup(request):
 #     template = 'ui/test2.html'
 #     context = {'transactions': transactions, 'total_amount': total_amount}
 #     return render(request, template, context)
-
+@login_required
+@group_required('Supervisor')
 def bank_overview(request):
     bank_name = request.GET.get('bank_name')
     transaction_type = request.GET.get('transaction_type')

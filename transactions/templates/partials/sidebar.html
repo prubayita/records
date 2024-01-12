@@ -14,6 +14,7 @@
     </div>
     <nav class="sidebar-nav">
       <ul>
+        {% if request.user.groups.all.0.name == 'Supervisor'  %}
         <li class="nav-item nav-item-has-children">
           <a
             href="#0"
@@ -30,14 +31,15 @@
                 />
               </svg>
             </span>
+            
             <span class="text">Dashboard</span>
           </a>
           <ul id="ddmenu_1" class="collapse show dropdown-nav">
             <li>
-              <a href="{% url 'bank_overview' %}" class="active">Bank Transactions Overview </a>
+              <a href="{% url 'bank_overview' %}" {% if request.path == "/bank_overview/" %} class="active" {% endif %}>Bank Transactions Overview </a>
             </li>
             <li>
-              <a href="{% url 'mt_overview' %}" class="">Money Transfer Overview </a>
+              <a href="{% url 'mt_overview' %}" {% if request.path == "/mt_overview/" %} class="active" {% endif %}>Money Transfer Overview </a>
             </li>
             
             <!-- <li>
@@ -65,6 +67,7 @@
             {% endif %} #} -->
           </ul>
         </li>   
+        {% endif %}
         <li class="nav-item nav-item-has-children">
           <a
             href="#0"
@@ -85,10 +88,10 @@
           </a>
           <ul id="ddmenu_2" class="collapse show dropdown-nav">
             <li>
-              <a href="{% url 'bank_record' %}"> Bank Transactions </a>
+              <a href="{% url 'bank_record' %}"{% if request.path == "/bank_record/" %} class="active" {% endif %}> Bank Transactions </a>
             </li>
             <li>
-              <a href="{% url 'mt_record' %}"> Money Transfer Transactions </a>
+              <a href="{% url 'mt_record' %}"{% if request.path == "/mt_record/" %} class="active" {% endif %}> Money Transfer Transactions </a>
             </li>
           </ul>
         </li>
