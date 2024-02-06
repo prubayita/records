@@ -140,7 +140,7 @@ def bank_overview(request):
 #     template = 'ui/mt_overview.html'  # Adjust the template path accordingly
 #     context = {'transactions': transactions, 'total_amount': total_amount}
 #     return render(request, template, context)
-
+@login_required
 def mt_overview(request):
     # Get filter parameters from GET request
     company = request.GET.get('company')
@@ -181,7 +181,7 @@ def mt_overview(request):
     context = {'transactions': transactions, 'total_amount': total_amount}
     return render(request, template, context)
 
-
+@login_required
 def bank_record(request):
     if request.method == 'POST':
         # Retrieve data from the form
@@ -200,11 +200,11 @@ def bank_record(request):
             amount=amount
         )
 
-        return redirect('overview')  # Redirect to the overview page or any other page
+        return redirect('bank_record')  # Redirect to the overview page or any other page
 
     template = 'ui/rec.html'
     return render(request, template)
-
+@login_required
 def mt_record(request):
     if request.method == 'POST':
         # Retrieve data from the form
@@ -225,7 +225,34 @@ def mt_record(request):
             amount=amount
         )
 
-        return redirect('overview')  # Redirect to the overview page for money transfer transactions
+        return redirect('mt_record')  # Redirect to the overview page for money transfer transactions
 
     template = 'ui/mt_rec.html'  
     return render(request, template)
+
+
+
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'ui/user_list.html', {'users': users})
+
+def delete_user(request, user_id):
+    if request.method == 'POST':
+        try:
+            user = User.objects.get(id=user_id)
+            user.delete()
+            messages.success(request, f"User '{user.username}' has been deleted.")
+        except User.DoesNotExist:
+            messages.error(request, "User not found.")
+    return redirect('user_list')
+
+def approve_staff(request, user_id):
+    if request.method == 'POST':
+        try:
+            user = User.objects.get(id=user_id)
+            user.is_staff = True
+            user.save()
+            messages.success(request, f"Staff status for '{user.username}' has been approved.")
+        except User.DoesNotExist:
+            messages.error(request, "User not found.")
+    return redirect('user_list')

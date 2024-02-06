@@ -16,6 +16,9 @@ class BankTransaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('client_id_passport', 'amount', 'date')
+
 class MoneyTransferTransaction(models.Model):
     COMPANY_CHOICES = [
         ('western_union', 'Western Union'),
@@ -31,3 +34,6 @@ class MoneyTransferTransaction(models.Model):
     company = models.CharField(max_length=20, choices=COMPANY_CHOICES)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('sender_id_passport', 'amount', 'date')
